@@ -3,6 +3,71 @@ output:
   html_document:
     fig_caption: false
 ---
+<style type="text/css">
+
+section {
+	clear: both;
+	padding: 12px;
+	margin: 0px;
+}
+
+container{ 
+        margin-top: 2em !important;
+        padding-top: 70px;
+}
+
+
+img {
+      padding: 12px;
+      margin: 0px;
+}
+picture {
+      padding: 12px;
+      margin: 0px;
+}
+
+figure {
+      padding: 12px;
+}
+body{ /* Normal  */
+      margin-top: 1em !important;
+      font-size: 16px;
+      padding: 20px;
+  }
+td {  /* Table  */
+  font-size: 12px;
+  padding: 12px;
+}
+h1.title {
+  margin-top: 1em !important;
+  font-size: 38px;
+  color: Black;
+  font-weight: normal;
+}
+h1 { /* Header 1 */
+  font-size: 22px;
+  color: Black;
+  font-weight: bold;
+}
+h2 { /* Header 2 */
+    font-size: 18px;
+  color: Black;
+  font-weight: bold;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+
+
 På denne side deles information om, hvordan man kan bruge/hente CVR-data fra Erhvervsstyrelsens ElasticSearch database med CVR-oplysninger. Her vises eksempler på hvordan man kan arbejde med databasen med Postman eller R. 
 
 For at kunne hente data skal man først have en bruger hos Erhvervsstyrelsen. Det får man ved at skrive til cvrselvbetjening@erst.dk. Se i øvrigt https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data.
