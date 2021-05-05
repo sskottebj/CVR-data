@@ -1,15 +1,7 @@
 ---
-title: "CVR-data med ElasticSearch med Postman"
-author: "Søren Skotte Bjerregaard"
-date: "23/4/2021"
-keywords: "ElasticSeach, Postman, CVR-data"
-output:
-  pdf_document:
-  html_document:
-    toc: true
-    toc_float: true
-    number_sections: true
-    fig_caption: false
+title: "CVR-data med ElasticSearch og Postman"
+keywords: "ElasticSearch, Postman, CVR-data"
+tags: "ElasticSearch, Postman, CVR-data" 
 ---
 
 <style type="text/css">
@@ -19,6 +11,12 @@ section {
 	padding: 12px;
 	margin: 0px;
 }
+
+container{ 
+        margin-top: 2em !important;
+        padding-top: 70px;
+}
+
 
 img {
       padding: 12px;
@@ -33,6 +31,7 @@ figure {
       padding: 12px;
 }
 body{ /* Normal  */
+      margin-top: 1em !important;
       font-size: 14px;
       padding: 20px;
   }
@@ -41,16 +40,20 @@ td {  /* Table  */
   padding: 12px;
 }
 h1.title {
+  margin-top: 1em !important;
   font-size: 38px;
   color: Black;
+  font-weight: normal;
 }
 h1 { /* Header 1 */
-  font-size: 18px;
+  font-size: 22px;
   color: Black;
+  font-weight: bold;
 }
 h2 { /* Header 2 */
-    font-size: 22px;
+    font-size: 18px;
   color: DarkBlue;
+  font-weight: bold;
 }
 h3 { /* Header 3 */
   font-size: 18px;
