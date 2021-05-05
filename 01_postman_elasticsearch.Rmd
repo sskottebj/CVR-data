@@ -1,7 +1,13 @@
 ---
 title: "CVR-data med ElasticSearch og Postman"
 keywords: "ElasticSearch, Postman, CVR-data"
-tags: "ElasticSearch, Postman, CVR-data" 
+tags: "ElasticSearch, Postman, CVR-data"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    fig_caption: false
 ---
 
 <style type="text/css">
