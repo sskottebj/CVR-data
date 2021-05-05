@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>CVR-data med ElasticSearch og Postman</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Adgang til CVR-data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Intro</a>
+</li>
+<li>
+  <a href="01_postman_elasticsearch.html">CVR-data med Postman og ElasticSearch</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">CVR-data med ElasticSearch og Postman</h1>
+
+</div>
+
+
+<style type="text/css">
+
+section {
+    clear: both;
+    padding: 12px;
+    margin: 0px;
+}
+
+container{ 
+        margin-top: 2em !important;
+        padding-top: 70px;
+}
+
+
+img {
+      padding: 12px;
+      margin: 0px;
+}
+picture {
+      padding: 12px;
+      margin: 0px;
+}
+
+figure {
+      padding: 12px;
+}
+body{ /* Normal  */
+      margin-top: 1em !important;
+      font-size: 14px;
+      padding: 20px;
+  }
+td {  /* Table  */
+  font-size: 12px;
+  padding: 12px;
+}
+h1.title {
+  margin-top: 1em !important;
+  font-size: 38px;
+  color: Black;
+  font-weight: normal;
+}
+h1 { /* Header 1 */
+  font-size: 22px;
+  color: Black;
+  font-weight: bold;
+}
+h2 { /* Header 2 */
+    font-size: 18px;
+  color: DarkBlue;
+  font-weight: bold;
+}
+h3 { /* Header 3 */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: DarkBlue;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+</style>
+<p>Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøve at lave en URL-request, hvor man skriver en “Body”, så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.</p>
+<p>Det fleste kender til data opstillet i tabulær form (rækker og kolonner). Udtræk fra ElasticSearch kommer dog i .json. Hvis man eksempelvis arbejder i R kan man omforme data med <code>jsonlite</code>-pakken. Det beskrives dog ikke nærmere i denne artikel.</p>
+<p>Artikel har følgende opbygning: Først introduceres download af Postman, herefter beskrives, hvordan man kommer i gang med Postman. Så vises det, hvordan man får en oversigt over databasen med CVR-data. Det vises herefter, hvordan man laver en Query / Forespørgsel til databasen og endelig illustreres det, hvordan man kan udtrække mange data fra databasen med scroll (dog kræver det en del manuelt arbejde i Postman).</p>
+<p>For at kunne hente data skal man først have en bruger hos Erhvervsstyrelsen. Det får man ved at skrive til <a href="mailto:cvrselvbetjening@erst.dk" class="email">cvrselvbetjening@erst.dk</a>. Se i øvrigt <a href="https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data" class="uri">https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data</a>.</p>
+<div id="download-postman" class="section level1">
+<h1><span class="header-section-number">1</span> Download Postman</h1>
+<p>Download Postman-appen fra <a href="https://www.postman.com/downloads/" class="uri">https://www.postman.com/downloads/</a>.</p>
+</div>
+<div id="kom-i-gang-med-postman" class="section level1">
+<h1><span class="header-section-number">2</span> Kom i gang med Postman</h1>
+<p>Åben Postman og lav først en ny “Collection”, som vist nedenfor.</p>
+<p><img src="NewCollectionZoom.png" alt="Add new collection" /></p>
+<p>Herefter tilføjer du en ny “Request” ved at højreklikke på din nye folder “New Collection”.</p>
+<p><img src="AddRequest.png" alt="Add new request" /></p>
+<p>Du kan nu trykke på den nytilføjede request:</p>
+<p><img src="NewRequest.png" alt="Add new request" /></p>
+</div>
+<div id="databaseoversigt-get-mapping" class="section level1">
+<h1><span class="header-section-number">3</span> Databaseoversigt (Get mapping)</h1>
+<p>Næste trin er at få en oversigt over indholdet i databasen. Det gør man ved at anmode om at se databasens “mapping”. Hvis man er vandt til data opdelt i rækker og kolonner, så kan en database organiseret i JSON godt virker lidt overvældende. Løst kan JSON-formatet oversættes til følgende:</p>
+<ul>
+<li>index repræsenterer en database</li>
+<li>type repræsenterer et datasæt</li>
+<li>fields repræsenterer en kolonne</li>
+<li>document repræsenterer en række</li>
+</ul>
+<p>En udemærket introduktion til forskellige koncepter i ElasticSearch og sammenhængen til en relationel databaser kan ses her: <a href="https://www.youtube.com/watch?v=ksTTlXNLick" class="uri">https://www.youtube.com/watch?v=ksTTlXNLick</a></p>
+<p>For at du kan tilgå databasen skal du først indsætte brugernavn og password, som du har fået udleveret af Erhvervsstyrelsen.</p>
+<div id="tilføj-credentials" class="section level2">
+<h2><span class="header-section-number">3.1</span> Tilføj credentials</h2>
+<p>Tryk på “Authorization”-fanen. Ud fra Type vælg “Basic Auth” og indsæt relevante oplysninger.</p>
+<p><img src="authorize.png" alt="Add credentials/password" /></p>
+<p>Skriv <a href="http://distribution.virk.dk/cvr-permanent" class="uri">http://distribution.virk.dk/cvr-permanent</a> til højre for “Get” og tryk “Send”. Vær opmærksom på der ikke er tomme felter/mellemrum indsat til sidst. Det vil give en fejlmeddelelse.</p>
+<p>Svaret fra dit kald til databasen vil se ud som vist nedenfor, hvis du trykker på de små pile, så koden folder sig op.</p>
+<p><img src="mapping.png" alt="Get mapping" /></p>
+<p>Her kan du se, at der er fire databaser:</p>
+<ul>
+<li>cvr-d-20180927</li>
+<li>cvr-m-20180307</li>
+<li>cvr-p-20200115</li>
+<li>cvr-v-20200115</li>
+</ul>
+<p>Ved at trykke på pilene igen kan du se indholdet i de enkelte databaser. Det er lidt uoverskueligt i starten, men en god reference når man skal søge i databasen, fordi oversigten angiver, hvilken type variabel der bruges. Ligesom i andre programmeringssprog er det ikke uvæsentligt om en variabel er en karakter, data eller numerisk variabel.</p>
+</div>
+</div>
+<div id="query-forespørgsel" class="section level1">
+<h1><span class="header-section-number">4</span> Query / Forespørgsel</h1>
+<p>Næste trin er at lave en forespørgsel, hvor vi sætter et filter på, hvad data vi skal hente hjem fra databasen.</p>
+<ul>
+<li>Tryk på den lille pil ved feltet “Get” og vælg “Post”</li>
+<li>Tryk på Body. I linjen men “none”, “form-data”… Vælg da “raw” og JSON. Ellers få du fejl.</li>
+<li>Skriv <a href="http://distribution.virk.dk/cvr-permanent/_search" class="uri">http://distribution.virk.dk/cvr-permanent/_search</a> i feltet ved siden af “Post”.</li>
+<li>Skriv koden som vist i billedet nedenfor i kodefeltet (eller copy-paste kodestykket under screen-shottet.)</li>
+<li>Tryk “Send”</li>
+<li>Under kodestykket du selv har indsæt kommer noget nyt kode.</li>
+<li>Sørg for at vælge “Pretty” og “JSON”</li>
+</ul>
+<p><img src="QuerySimpleFilter.png" alt="Simple Query" /> Nedenstående kode er nemmere at kopiere:</p>
+<pre class="r"><code>{
+    &quot;size&quot; : 10,
+    &quot;query&quot;: {
+        &quot;bool&quot;: {
+            &quot;must&quot;: [
+                {
+                &quot;range&quot;: {
+                    &quot;Vrvirksomhed.aarsbeskaeftigelse.aar&quot;: {
+                        &quot;lt&quot;: &quot;2019&quot;,
+                          &quot;gt&quot;: &quot;2017&quot;
+                              }
+                          }
+                 }
+                     ]
+            
+                 }
+    }
+}</code></pre>
+<p>Overstående forespørgsel giver et væld af informationer. Ved at tilføje "_source" kan vi vælge, at det kun er nogle specifikke fields (kolonner om man vil), der udskrives. Nedenfor er det kun informationer i indlejret i <code>Vrvirksomhed.aarsbeskaeftigelse</code> og <code>Vrvirksomhed.penheder</code>, der udskrives.</p>
+<p><img src="PenhedQuerySimpleSelectProperties.png" alt="Select properties to output" /></p>
+<p>Koden kan også ses her:</p>
+<pre class="r"><code>{
+    &quot;_source&quot;: [&quot;Vrvirksomhed.aarsbeskaeftigelse&quot;, &quot;Vrvirksomhed.penheder&quot;],
+    &quot;size&quot; : 10,
+    &quot;query&quot;: {
+        &quot;bool&quot;: {
+            &quot;must&quot;: [
+                {
+                &quot;range&quot;: {
+                    &quot;Vrvirksomhed.aarsbeskaeftigelse.aar&quot;: {
+                        &quot;lt&quot;: &quot;2019&quot;,
+                          &quot;gt&quot;: &quot;2017&quot;
+                              }
+                          }
+                 }
+                     ]
+            
+                 }
+    }
+}</code></pre>
+</div>
+<div id="udskriv-mange-informationer-scroll" class="section level1">
+<h1><span class="header-section-number">5</span> Udskriv mange informationer (scroll)</h1>
+<p>En udfordring ved ElasticSearch er, at der kun udskrives et begrænset antal observationer. Default er 10 observationer. Dette kan hæves til 3.000 observationer, når man trækker data fra Erhvervsstyrelsens CVR-database. Hvis man skal hive flere observationer ud kan man bruge scroll-funktionen i ElasticSearch. Det giver mulighed for at hive 3.000 observationer ud efterfulgt af de næste 3.000 observationer osv.</p>
+<p>Her illustreres eksemplet ved at copy-paste output over i en noteblok, som herefter omdøbes til at have en .json ekstension. Det er selvsagt ikke en særligt skalerbar metode. For at automatisere denne proces skal man bruge et program som eksempelvis R, Python, C# mv. Dette afdækkes imidlertig ikke i denne artikel.</p>
+<p>Første skridt er at ændre sin “Post” / URL-request til:</p>
+<pre class="r"><code>http://distribution.virk.dk/cvr-permanent/_search?scroll=1m</code></pre>
+<p>Samtidig kan size-parameteren i ens body opjusteres til 3000 observationer. Send herefter din request (tryk Send) og i dit svar kommer nu et scroll-id (se figur nedenfor).</p>
+<p><img src="initScroll.png" alt="Setup scroll" /></p>
+<p>Lav en ny Post-request med følgendew URL-request:</p>
+<pre class="r"><code>http://distribution.virk.dk/_search/scroll</code></pre>
+<p>Og skriv følgende i din “Body”, hvor du indsætter det scroll-id, som du fik i forrige scroll.</p>
+<pre class="r"><code>{
+    &quot;scroll&quot;: &quot;1m&quot;,
+    &quot;scroll_id&quot;: &quot;DnF1ZXJ5VGhlbkZldGNoDQAAAAAmwwdGFjZEQUcyd1JzUVF1RzhBWWNjTER1WUEAAAAAJsMHRxY2REFHMndSc1FRdUc4QVljY0xEdVlBAAAAACbDB0gWNkRBRzJ3UnNRUXVHOEFZY2NMRHVZQQAAAAAmycAzFnJJU1NwRnh2VGkyWTBtQVJPckZlZ0EAAAAAJsTH9hZsOVJReVVYVVR0cVFuTWJyN2JMSzZRAAAAACbDB0kWNkRBRzJ3UnNRUXVHOEFZY2NMRHVZQQAAAAAmwwdKFjZEQUcyd1JzUVF1RzhBWWNjTER1WUEAAAAAJsTH9xZsOVJReVVYVVR0cVFuTWJyN2JMSzZRAAAAACbJwDQWcklTU3BGeHZUaTJZMG1BUk9yRmVnQQAAAAAmxMf4Fmw5UlF5VVhVVHRxUW5NYnI3YkxLNlEAAAAAJsTH-RZsOVJReVVYVVR0cVFuTWJyN2JMSzZRAAAAACbJwDUWcklTU3BGeHZUaTJZMG1BUk9yRmVnQQAAAAAmycA2FnJJU1NwRnh2VGkyWTBtQVJPckZlZ0E=&quot;
+}</code></pre>
+<p>Figuren nedenfor illustrerer også eksemplet:</p>
+<p><img src="ContinueScroll.png" alt="Scroll with new ID" /> Tryk “Send” og de næste 3.000 observationer dukker op. Gem data i et notesblok, hvor du omdøber din extension til .json (fx 01data.json, …, 12data.json) indtil du har “scrollet” igennem alle observationer.</p>
+<p>Se eventuelt denne video for en bedre forståelse af scroll-API’en: <a href="https://www.youtube.com/watch?v=8noSYHuTeSM" class="uri">https://www.youtube.com/watch?v=8noSYHuTeSM</a></p>
+<p><em>Note: Jeg har prøvet at bruge scroll i R med pakkerne <code>httr</code>, <code>elastic</code> og <code>elasticsearchr</code>, men kan ikke få adgang til at bruge scroll-API’en fra R, selvom det virker fra Postman. Hvis man har en liste med CVR-numre, hvor man vil knytte en særlig information i et datasæt kan man eventuelt lave en for-loop, som finder og gemmer alle relevante informationer.</em></p>
+<p>Hvis du har forslag til forbedringer/korrektur er du velkommen til at skrive en mail til mig. Mine oplysninger er her: <a href="https://nfa.dk/da/Forskning/Person?employeeId=c94aeb87-1861-49a7-b46c-fe82e52f59a5" class="uri">https://nfa.dk/da/Forskning/Person?employeeId=c94aeb87-1861-49a7-b46c-fe82e52f59a5</a></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

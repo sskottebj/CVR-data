@@ -1,0 +1,18 @@
+---
+name: "CVR-data med Postman og ElasticSearch"
+output_dir: "docs"
+navbar:
+  title: "Adgang til CVR-data"
+  left:
+    - text: "Intro"
+      href: index.html
+    - text: "CVR-data med Postman og ElasticSearch"
+      href: 01_postman_elasticsearch.html
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    fig_caption: false
+    theme: cosmo
+---
