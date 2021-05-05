@@ -52,7 +52,7 @@ h1 { /* Header 1 */
 }
 h2 { /* Header 2 */
     font-size: 18px;
-  color: DarkBlue;
+  color: Black;
   font-weight: bold;
 }
 h3 { /* Header 3 */
@@ -72,7 +72,7 @@ pre { /* Code block - determines code spacing between lines */
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøve at lave en URL-request, hvor man skriver en "Body", så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.
+Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøvet at lave en URL-request, hvor man skriver en "Body", så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.
 
 Det fleste kender til data opstillet i tabulær form (rækker og kolonner). Udtræk fra ElasticSearch kommer dog i .json. Hvis man eksempelvis arbejder i R kan man omforme data med `jsonlite`-pakken. Det beskrives dog ikke nærmere i denne artikel.
 
@@ -115,7 +115,7 @@ For at du kan tilgå databasen skal du først indsætte brugernavn og password, 
 
 Tryk på "Authorization"-fanen. Ud fra Type vælg "Basic Auth" og indsæt relevante oplysninger.
 
-![Add credentials/password](authorize.png)
+![Add credentials/password](Inkedauthorize_LI.jpg)
 
 Skriv http://distribution.virk.dk/cvr-permanent til højre for "Get" og tryk "Send". Vær opmærksom på der ikke er tomme felter/mellemrum indsat til sidst. Det vil give en fejlmeddelelse.
 
