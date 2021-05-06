@@ -78,11 +78,11 @@ pre { /* Code block - determines code spacing between lines */
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøvet at lave en URL-request, hvor man skriver en "Body", så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.
+Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøvet at lave en URL-request, hvor man skriver en "body", så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.
 
-Det fleste kender til data opstillet i tabulær form (rækker og kolonner). Udtræk fra ElasticSearch kommer dog i .json. Hvis man eksempelvis arbejder i R kan man omforme data med `jsonlite`-pakken. Det beskrives dog ikke nærmere i denne artikel.
+Det fleste kender til data opstillet i et datasæt med rækker og kolonner. Udtræk fra ElasticSearch kommer dog i .json. Hvis man eksempelvis arbejder i R kan man omforme data med `jsonlite`-pakken. Det beskrives dog ikke nærmere i denne artikel.
 
-Artikel har følgende opbygning: Først introduceres download af Postman, herefter beskrives, hvordan man kommer i gang med Postman. Så vises det, hvordan man får en oversigt over databasen med CVR-data. Det vises herefter, hvordan man laver en Query / Forespørgsel til databasen og endelig illustreres det, hvordan man kan udtrække mange data fra databasen med scroll (dog kræver det en del manuelt arbejde i Postman).
+Artiklen har følgende opbygning: Først introduceres download af Postman, herefter beskrives, hvordan man kommer i gang med Postman. Så vises det, hvordan man får en oversigt over databasen med CVR-data. Det vises herefter, hvordan man laver en Query / forespørgsel til databasen og endelig illustreres det, hvordan man kan udtrække mange data fra databasen med scroll (dog kræver det en del manuelt arbejde i Postman).
 
 For at kunne hente data skal man først have en bruger hos Erhvervsstyrelsen. Det får man ved at skrive til cvrselvbetjening@erst.dk. Se i øvrigt https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data.
 
@@ -106,7 +106,7 @@ Du kan nu trykke på den nytilføjede request:
 
 # Databaseoversigt (Get mapping)
 
-Næste trin er at få en oversigt over indholdet i databasen. Det gør man ved at anmode om at se databasens "mapping". Hvis man er vandt til data opdelt i rækker og kolonner, så kan en database organiseret i JSON godt virker lidt overvældende. Løst kan JSON-formatet oversættes til følgende:
+Næste trin er at få en oversigt over indholdet i databasen. Det gør man ved at anmode om at se databasens "mapping". Hvis man er vant til data opdelt i rækker og kolonner, så kan en database organiseret i JSON godt virker lidt overvældende. Løst kan JSON-formattet oversættes til følgende:
 
  - index repræsenterer en database
  - type repræsenterer et datasæt
@@ -143,11 +143,11 @@ Ved at trykke på pilene igen kan du se indholdet i de enkelte databaser. Det er
 Næste trin er at lave en forespørgsel, hvor vi sætter et filter på, hvad data vi skal hente hjem fra databasen.
 
  - Tryk på den lille pil ved feltet "Get" og vælg "Post"
- - Tryk på Body. I linjen men "none", "form-data"... Vælg da "raw" og JSON. Ellers få du fejl. 
+ - Tryk på Body. I linjen men "none", "form-data"... Vælg da "raw" og JSON. Ellers får du en fejlmeddelelse. 
  - Skriv http://distribution.virk.dk/cvr-permanent/_search i feltet ved siden af "Post".
  - Skriv koden som vist i billedet nedenfor i kodefeltet (eller copy-paste kodestykket under screen-shottet.)
  - Tryk "Send"
- - Under kodestykket du selv har indsæt kommer noget nyt kode. 
+ - Under kodestykket du selv har indsat kommer noget nyt kode, som er svaret på den forespørgsel (data). 
  - Sørg for at vælge "Pretty" og "JSON"
 
 ![Simple Query](QuerySimpleFilter.png)
@@ -174,7 +174,7 @@ Nedenstående kode er nemmere at kopiere:
 }
 ```
 
-Overstående forespørgsel giver et væld af informationer. Ved at tilføje "_source" kan vi vælge, at det kun er nogle specifikke fields (kolonner om man vil), der udskrives. Nedenfor er det kun informationer i indlejret i `Vrvirksomhed.aarsbeskaeftigelse` og `Vrvirksomhed.penheder`, der udskrives.
+Overstående forespørgsel giver et væld af informationer. Ved at tilføje "_source" kan vi vælge, at det kun er nogle specifikke fields (kolonner), der udskrives. Nedenfor er det kun informationer i indlejret i `Vrvirksomhed.aarsbeskaeftigelse` og `Vrvirksomhed.penheder`, der udskrives.
 
 ![Select properties to output](PenhedQuerySimpleSelectProperties.png)
 
@@ -214,11 +214,11 @@ Første skridt er at ændre sin "Post" / URL-request til:
 http://distribution.virk.dk/cvr-permanent/_search?scroll=1m
 ```
 
-Samtidig kan size-parameteren i ens body opjusteres til 3000 observationer. Send herefter din request (tryk Send) og i dit svar kommer nu et scroll-id (se figur nedenfor). 
+Samtidig kan size-parameteren i ens body opjusteres til 3.000 observationer. Send herefter din request (tryk Send) og i dit svar kommer nu et scroll-id (se figur nedenfor). 
 
 ![Setup scroll](initScroll.png)
 
-Lav en ny Post-request med følgendew URL-request: 
+Lav en ny Post-request med følgende URL-request: 
 
 ```{r, eval=FALSE}
 http://distribution.virk.dk/_search/scroll

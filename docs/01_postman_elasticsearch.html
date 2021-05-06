@@ -402,9 +402,9 @@ pre { /* Code block - determines code spacing between lines */
     font-size: 14px;
 }
 </style>
-<p>Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøvet at lave en URL-request, hvor man skriver en “Body”, så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.</p>
-<p>Det fleste kender til data opstillet i tabulær form (rækker og kolonner). Udtræk fra ElasticSearch kommer dog i .json. Hvis man eksempelvis arbejder i R kan man omforme data med <code>jsonlite</code>-pakken. Det beskrives dog ikke nærmere i denne artikel.</p>
-<p>Artikel har følgende opbygning: Først introduceres download af Postman, herefter beskrives, hvordan man kommer i gang med Postman. Så vises det, hvordan man får en oversigt over databasen med CVR-data. Det vises herefter, hvordan man laver en Query / Forespørgsel til databasen og endelig illustreres det, hvordan man kan udtrække mange data fra databasen med scroll (dog kræver det en del manuelt arbejde i Postman).</p>
+<p>Denne artikel introducerer, hvordan man kan komme i gang med at lave udtræk med CVR-data, som opbevares i en ElasticSearch-database. Udtrækkene laves med Postman, som også introduceres. Det er sværere at automatisere udtrækkene i Postman fremfor eksempelvis at bruge R eller Python, men hvis ikke man har prøvet at lave en URL-request, hvor man skriver en “body”, så er Postman et godt sted at starte, fordi programmet hjælper en med at opstille en request.</p>
+<p>Det fleste kender til data opstillet i et datasæt med rækker og kolonner. Udtræk fra ElasticSearch kommer dog i .json. Hvis man eksempelvis arbejder i R kan man omforme data med <code>jsonlite</code>-pakken. Det beskrives dog ikke nærmere i denne artikel.</p>
+<p>Artiklen har følgende opbygning: Først introduceres download af Postman, herefter beskrives, hvordan man kommer i gang med Postman. Så vises det, hvordan man får en oversigt over databasen med CVR-data. Det vises herefter, hvordan man laver en Query / forespørgsel til databasen og endelig illustreres det, hvordan man kan udtrække mange data fra databasen med scroll (dog kræver det en del manuelt arbejde i Postman).</p>
 <p>For at kunne hente data skal man først have en bruger hos Erhvervsstyrelsen. Det får man ved at skrive til <a href="mailto:cvrselvbetjening@erst.dk" class="email">cvrselvbetjening@erst.dk</a>. Se i øvrigt <a href="https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data" class="uri">https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data</a>.</p>
 <div id="download-postman" class="section level1">
 <h1><span class="header-section-number">1</span> Download Postman</h1>
@@ -421,7 +421,7 @@ pre { /* Code block - determines code spacing between lines */
 </div>
 <div id="databaseoversigt-get-mapping" class="section level1">
 <h1><span class="header-section-number">3</span> Databaseoversigt (Get mapping)</h1>
-<p>Næste trin er at få en oversigt over indholdet i databasen. Det gør man ved at anmode om at se databasens “mapping”. Hvis man er vandt til data opdelt i rækker og kolonner, så kan en database organiseret i JSON godt virker lidt overvældende. Løst kan JSON-formatet oversættes til følgende:</p>
+<p>Næste trin er at få en oversigt over indholdet i databasen. Det gør man ved at anmode om at se databasens “mapping”. Hvis man er vant til data opdelt i rækker og kolonner, så kan en database organiseret i JSON godt virker lidt overvældende. Løst kan JSON-formattet oversættes til følgende:</p>
 <ul>
 <li>index repræsenterer en database</li>
 <li>type repræsenterer et datasæt</li>
@@ -452,11 +452,11 @@ pre { /* Code block - determines code spacing between lines */
 <p>Næste trin er at lave en forespørgsel, hvor vi sætter et filter på, hvad data vi skal hente hjem fra databasen.</p>
 <ul>
 <li>Tryk på den lille pil ved feltet “Get” og vælg “Post”</li>
-<li>Tryk på Body. I linjen men “none”, “form-data”… Vælg da “raw” og JSON. Ellers få du fejl.</li>
+<li>Tryk på Body. I linjen men “none”, “form-data”… Vælg da “raw” og JSON. Ellers får du en fejlmeddelelse.</li>
 <li>Skriv <a href="http://distribution.virk.dk/cvr-permanent/_search" class="uri">http://distribution.virk.dk/cvr-permanent/_search</a> i feltet ved siden af “Post”.</li>
 <li>Skriv koden som vist i billedet nedenfor i kodefeltet (eller copy-paste kodestykket under screen-shottet.)</li>
 <li>Tryk “Send”</li>
-<li>Under kodestykket du selv har indsæt kommer noget nyt kode.</li>
+<li>Under kodestykket du selv har indsat kommer noget nyt kode, som er svaret på den forespørgsel (data).</li>
 <li>Sørg for at vælge “Pretty” og “JSON”</li>
 </ul>
 <p><img src="QuerySimpleFilter.png" alt="Simple Query" /> Nedenstående kode er nemmere at kopiere:</p>
@@ -478,7 +478,7 @@ pre { /* Code block - determines code spacing between lines */
                  }
     }
 }</code></pre>
-<p>Overstående forespørgsel giver et væld af informationer. Ved at tilføje "_source" kan vi vælge, at det kun er nogle specifikke fields (kolonner om man vil), der udskrives. Nedenfor er det kun informationer i indlejret i <code>Vrvirksomhed.aarsbeskaeftigelse</code> og <code>Vrvirksomhed.penheder</code>, der udskrives.</p>
+<p>Overstående forespørgsel giver et væld af informationer. Ved at tilføje "_source" kan vi vælge, at det kun er nogle specifikke fields (kolonner), der udskrives. Nedenfor er det kun informationer i indlejret i <code>Vrvirksomhed.aarsbeskaeftigelse</code> og <code>Vrvirksomhed.penheder</code>, der udskrives.</p>
 <p><img src="PenhedQuerySimpleSelectProperties.png" alt="Select properties to output" /></p>
 <p>Koden kan også ses her:</p>
 <pre class="r"><code>{
@@ -507,9 +507,9 @@ pre { /* Code block - determines code spacing between lines */
 <p>Her illustreres eksemplet ved at copy-paste output over i en noteblok, som herefter omdøbes til at have en .json ekstension. Det er selvsagt ikke en særligt skalerbar metode. For at automatisere denne proces skal man bruge et program som eksempelvis R, Python, C# mv. Dette afdækkes imidlertig ikke i denne artikel.</p>
 <p>Første skridt er at ændre sin “Post” / URL-request til:</p>
 <pre class="r"><code>http://distribution.virk.dk/cvr-permanent/_search?scroll=1m</code></pre>
-<p>Samtidig kan size-parameteren i ens body opjusteres til 3000 observationer. Send herefter din request (tryk Send) og i dit svar kommer nu et scroll-id (se figur nedenfor).</p>
+<p>Samtidig kan size-parameteren i ens body opjusteres til 3.000 observationer. Send herefter din request (tryk Send) og i dit svar kommer nu et scroll-id (se figur nedenfor).</p>
 <p><img src="initScroll.png" alt="Setup scroll" /></p>
-<p>Lav en ny Post-request med følgendew URL-request:</p>
+<p>Lav en ny Post-request med følgende URL-request:</p>
 <pre class="r"><code>http://distribution.virk.dk/_search/scroll</code></pre>
 <p>Og skriv følgende i din “Body”, hvor du indsætter det scroll-id, som du fik i forrige scroll.</p>
 <pre class="r"><code>{

@@ -1,4 +1,5 @@
 ---
+title: "Erfaringsudveksling med systemadgang til CVR-data"
 output:
   html_document:
     fig_caption: false
@@ -68,6 +69,6 @@ pre { /* Code block - determines code spacing between lines */
 </style>
 
 
-På denne side deles information om, hvordan man kan bruge/hente CVR-data fra Erhvervsstyrelsens ElasticSearch database med CVR-oplysninger. Her vises eksempler på hvordan man kan arbejde med databasen med Postman eller R. 
+På denne side deles information om, hvordan man kan bruge/hente CVR-data fra Erhvervsstyrelsens ElasticSearch database med CVR-oplysninger. Her vises eksempler på, hvordan man kan arbejde med databasen med Postman eller R. 
 
 For at kunne hente data skal man først have en bruger hos Erhvervsstyrelsen. Det får man ved at skrive til cvrselvbetjening@erst.dk. Se i øvrigt https://data.virk.dk/datakatalog/erhvervsstyrelsen/system-til-system-adgang-til-cvr-data.
